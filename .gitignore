@@ -16,4 +16,5 @@ Thumbs.db
 .mhtml
 learn.md
 **/migrations/
-/backend/migrations
+/backend/migrations/
+migrations/
