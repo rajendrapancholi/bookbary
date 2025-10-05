@@ -1,4 +1,4 @@
-import { BarChart3, BookOpenText, BookText, LayoutDashboard, LibraryBig, LogOutIcon, PlusSquare, ShoppingCart, Users } from "lucide-react";
+import { BarChart3, BookOpenText, LayoutDashboard, LibraryBig, LogOutIcon, PlusSquare, Users } from "lucide-react";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
