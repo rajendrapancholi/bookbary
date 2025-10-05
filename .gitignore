@@ -15,3 +15,5 @@ logs
 Thumbs.db
 .mhtml
 learn.md
+**/migrations/
+/backend/migrations

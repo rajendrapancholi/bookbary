@@ -1,6 +1,6 @@
 -- CREATE DATABASE library_db;
 
-USE testLMS;
+USE library_db;
 
 CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT,
