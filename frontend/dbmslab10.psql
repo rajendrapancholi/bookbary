@@ -1,0 +1,26 @@
+postgres=# CREATE DATABASE COMPANYDB
+CREATE DATABASE
+you are now connected to database "COMPANYDB" as user "ruser".
+COMPANYDB=# CREATE TABLE COMPANY(
+COMPANYDB=# id SERIAL PRIMARY KEY,
+COMPANYDB=# name TEXT NOT NULL,
+COMPANYDB=# department TEXT NOT NULL,
+COMPANYDB=# salary NUMERIC(10,2) NOT NULL
+COMPANYDB=# );
+CREATE TABLE
+
+COMPANYDB=# INSERT INTO COMPANY (name, department, salary) VALUES
+COMPANYDB=# ("Rajendra Pancholi", "IT", 120000)
+COMPANYDB=# ("Mohan Yadav", "Sales", 80000)
+COMPANYDB=# ("Narendra Modi", "Marketing", 70000)
+COMPANYDB=# ("Rahul Gandhi", "HR", 60000);
+INSERT 0 4
+
+COMPANYDB=# SELECT * FROM COMPANY;
+ id |       name        |  department  | salary
+----+-------------------+--------------+------------   
+  1 | Rajendra Pancholi | IT           | 120000.00  
+  2 | Mohan Yadav       | Sales        | 80000.00   
+  3 | Narendra Modi     | Marketing    | 70000.00   
+  4 | Rahul Gandhi      | HR           | 60000.00   
+(4 rows)

@@ -1,0 +1,102 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px; /* Adjust width for vertical scrollbar */
+  height: 6px; /* Adjust height for horizontal scrollbar */
+}
+
+/* Scrollbar Track */
+::-webkit-scrollbar-track {
+  background: #323232; /* Light gray background */
+  border-radius: 10px;
+}
+
+/* Scrollbar Handle */
+::-webkit-scrollbar-thumb {
+  background: #c5610b84; /* Darker gray handle */
+  border-radius: 10px;
+}
+
+/* Scrollbar Handle on Hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #c5620b; /* Darker shade on hover */
+}
+
+/* For Firefox */
+/* * {
+  scrollbar-width: thin;
+  scrollbar-color: #c5610b84 #323232;
+} */
+
+.navItems {
+  @apply block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-amber-600 md:p-0 dark:text-white md:dark:hover:text-amber-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700;
+}
+body {
+  @apply dark:bg-gray-700;
+}
+@layer base {
+  ::selection {
+    @apply bg-cyan-400 text-black; /* Red background, white text */
+  }
+  ::-moz-selection {
+    @apply bg-cyan-400 text-black; /* For Firefox */
+  }
+}
+.home-background {
+  background-image: url("/main-banner1.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: scroll;
+  width: 100vw;
+  height: 100vh;
+}
+.bg-gradient {
+  @apply bg-gradient-to-r from-amber-700 via-amber-600 to-amber-500;
+}
+.bg-gradient-btn {
+  @apply bg-gradient-to-r from-amber-700/70 via-amber-600/70 to-amber-500/70 hover:from-amber-700 hover:via-amber-600 hover:to-amber-500 transition-all;
+}
+.bg-gradient-btn-logout {
+  @apply bg-gradient-to-r from-red-700/70 via-red-600/70 to-red-500/70 hover:from-red-700 hover:via-red-600 hover:to-red-500 transition-all;
+}
+
+.card {
+  width: 300px;
+  height: 200px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.hover-scale-right-top-bottom {
+  transform-origin: left center; /* Scale from the left */
+  transition: transform 0.2s ease-in-out;
+}
+
+.hover-scale-right-top-bottom:hover {
+  transform: scaleX(1.05) scaleY(1.05); /* Expand only right, top, bottom */
+}
+
+.flex-center {
+  @apply flex items-center justify-center;
+}
+.flex-center-column {
+  @apply flex items-center justify-center flex-col;
+}
+
+.text-shadow {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Adjust values as needed */
+}
+
+.text-shadow-lg {
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+.text-shadow-xl {
+  text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.7);
+}
+
+.inputField {
+  @apply px-2 block w-full p-2.5 rounded-md border border-gray-300 dark:border-gray-600 focus:outline-none outline-none focus:ring-2 focus:ring-cyan-400 dark:bg-gray-800/40 dark:text-white;
+}
