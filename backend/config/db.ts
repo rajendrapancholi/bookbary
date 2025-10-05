@@ -28,21 +28,3 @@ export default pool;
 
 
 
-
-
-
-/* 
-
-| Tables_in_libraryMngmt |
-+-------------------------+
-| AUTHORS                 |
-| BOOKS                   |
-| BOOK_CATEGORY           |
-| READERS                 |
-| RETURN_DATES            |
-| SALARIES                |
-| STAFF                   |
-| TEST                    |
-| USERS   
-
-*/
