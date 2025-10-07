@@ -27,8 +27,8 @@
   <a href="#installation">Installation</a> •
   <a href="#usage">Usage</a> •
   <a href="#screenshots">Screenshots</a> •
-  <a href="#contributing">Contributing</a>
-  <a href="#license">License</a>
+  <a href="#contributing">Contributing</a> •
+  <a href="#license">License</a> •
   <a href="#contact">Contact</a>
 </p>
 
@@ -124,17 +124,24 @@ yarn dev
 
 ## Screenshots
 
+### Home page
+
+![Home page](screenshots/home.jpg)
+
 ### Admin Dashboard
 
-![Admin Dashboard](screenshots/admin_dashboard.png)
+![Admin Dashboard](screenshots/admindashboarc.jpg)
 
 ### Book Management
 
-![Book Management](screenshots/book_management.png)
+![Book Management](screenshots/editbook.jpg)
 
-### Member Management
+### All Books
 
-![Member Management](screenshots/member_management.png)
+![All Books](screenshots/booklist.jpg)
+
+### Add book
+![Add Book](screenshots/addbooks.jpg)
 
 ---
 
