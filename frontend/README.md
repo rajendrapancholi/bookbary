@@ -72,7 +72,7 @@ With BookBary, administrators can monitor library activity, track issued and ove
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/bookbary.git
+git clone https://github.com/rajendrapancholi/bookbary.git
 cd bookbary
 ````
 
