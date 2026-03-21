@@ -5,6 +5,7 @@ import bookRoutes from "./routes/bookRoutes";
 import authorRoutes from "./routes/authorRoutes";
 import categoryRoutes from "./routes/categoryRoutes";
 import cors from "cors";
+import morgan from "morgan";
 dotenv.config();
 
 // Initialize express
@@ -17,9 +18,9 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true, // If you use cookies or sessions, set this to true
 };
-
 // Use the CORS middleware with the specified options
 app.use(cors(corsOptions));
+app.use(morgan('dev')); 
 
 // Body parser middleware
 app.use(express.json());

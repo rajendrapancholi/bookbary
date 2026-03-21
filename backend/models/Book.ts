@@ -25,7 +25,8 @@ export interface ReturnBookType {
 // Get all books
 export const getAllBooks = async (): Promise<Book[]> => {
   const [rows] = await db.execute<RowDataPacket[]>(
-    "SELECT bookId, title, price, quantity, category_name , edition, auth_id from BOOKS JOIN BOOK_CATEGORY ON BOOKS.cat_id=BOOK_CATEGORY.cat_id ORDER BY bookId"
+    // "SELECT bookId, title, price, quantity, category_name , edition, auth_id from BOOKS JOIN BOOK_CATEGORY ON BOOKS.cat_id=BOOK_CATEGORY.cat_id ORDER BY bookId"
+    "SELECT bookId, title, price, category_name , edition, auth_id from BOOKS JOIN BOOK_CATEGORY ON BOOKS.cat_id=BOOK_CATEGORY.cat_id ORDER BY bookId"
   );
   // const [rows] = await db.execute<RowDataPacket[]>("SELECT * FROM BOOKS");
   // SELECT bookId, title, price, category_name , edition, auth_id from BOOKS JOIN BOOK_CATEGORY ON BOOKS.cat_id=BOOK_CATEGORY.cat_id

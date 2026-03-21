@@ -20,7 +20,8 @@ export interface AuthorType {
 // Get all books
 export const getAllAuthors = async (): Promise<AuthorType[]> => {
   const [rows] = await db.execute<RowDataPacket[]>(
-    `SELECT authId, CONCAT(Fname, " ", Lname) as auth_name, email, category, address FROM AUTHORS ORDER BY authId`
+    // `SELECT authId, CONCAT(Fname, " ", Lname) as auth_name, email, category, address FROM AUTHORS ORDER BY authId`
+    `SELECT authId, CONCAT(Fname, " ", Lname) as auth_name, email, address FROM AUTHORS ORDER BY authId`
   );
   return rows as AuthorType[];
 };

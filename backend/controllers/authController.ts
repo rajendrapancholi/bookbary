@@ -7,11 +7,11 @@ import { generateToken } from "../utils/generateToken";
 // Register user
 export const registerUser = asyncHandler(
   async (req: Request, res: Response) => {
-    const { fName, lName, email, password, role } = req.body;
+    const { fName, lName, email, password } = req.body;
     console.log("Request body:", req.body); // Log to check incoming request
 
     // Ensure all required fields are present
-    if (!fName || !lName || !email || !password || !role) {
+    if (!fName || !lName || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -28,7 +28,6 @@ export const registerUser = asyncHandler(
       lName,
       email,
       password: hashedPassword,
-      role,
     };
     console.log("New User object:", newUser);
 
@@ -46,13 +45,14 @@ export const registerUser = asyncHandler(
 export const loginUser = asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
+
   // Check if email and password are provided
   if (!email || !password) {
     return res.status(400).json({ message: "Email and password are required" });
   }
 
   const user = await getUserByEmail(email);
-
+  console.log('User is', user);
   if (user && (await bcrypt.compare(password, user.password))) {
     const token = generateToken(user.uid, user.isAdmin === 1, user.role);
 
@@ -70,11 +70,4 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
     res.status(401).json({ message: "Invalid email or password" });
   }
 });
-// {
-//   "token": "your.jwt.token",
-//   "user": {
-//     "id": 1,
-//     "email": "admin@example.com",
-//     "isAdmin": true
-//   }
-// }
+

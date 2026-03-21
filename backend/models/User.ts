@@ -10,8 +10,9 @@ export interface User {
   role?: string;
 }
 
+
 export const createUser = async (user: User) => {
-  const { fName, lName, email, password, role = "worker" } = user;
+  const { fName, lName, email, password, role = "user" } = user;
 
   // Ensure that we are passing all the required values
   const sql = `INSERT INTO USERS (Fname, Lname, email, password, role) VALUES (?, ?, ?, ?, ?)`;

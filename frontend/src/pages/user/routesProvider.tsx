@@ -20,6 +20,7 @@ import IssuedBooks from "./IssuedBooks";
 import UserCart from "../../components/User/UserCart";
 import GetAuthors from "../admin/GetAuthors";
 import AddBook from "../admin/AddBook";
+import Register from "../Register";
 
 const RoutesProvider: React.FC = () => {
     const router = createBrowserRouter([
@@ -29,7 +30,7 @@ const RoutesProvider: React.FC = () => {
             children: [
                 { path: "/", element: <Home /> },
                 { path: "/login", element: <Login /> },
-                // { path: "/", element: <Register /> },
+                { path: "/register", element: <Register /> },
                 { path: "/about", element: <About /> },
                 { path: "/services", element: <Services /> },
                 { path: "/contact", element: <Contact /> },

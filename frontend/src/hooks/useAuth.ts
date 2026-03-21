@@ -1,14 +1,14 @@
 import { useMutation } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../features/auth/authSlice";
-import { loginUser, LoginRequest, LoginResponse } from "../api/authApi";
+import { loginUser, LoginRequest, LoginResponse, RegisterRequest, registerUser } from "../api/authApi";
 
 // Define the useAuth hook
 export const useAuth = () => {
   const dispatch = useDispatch();
 
   // Mutation to handle user login
-  const { mutate, status, isError, error } = useMutation<
+  const loginMutation= useMutation<
     LoginResponse,
     Error,
     LoginRequest
@@ -28,5 +28,17 @@ export const useAuth = () => {
     },
   });
 
-  return { mutate, status, isError, error };
+  const registerMutation = useMutation<any, Error, RegisterRequest>({
+    mutationFn: (data: RegisterRequest) => registerUser(data),
+  });
+
+  return {
+    login: loginMutation.mutate,
+    isLoggingIn: loginMutation.status === "pending",
+    loginError: loginMutation.error,
+
+    register: registerMutation.mutate,
+    isRegistering: registerMutation.status === "pending",
+    registerError: registerMutation.error
+  };
 };

@@ -2,9 +2,11 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 const Home: React.FC = () => {
-    console.log(import.meta.env.API_BASE_URL, "base url");
+    const api = process.env.VITE_API_BASE_URL;
+
     return (
         <div className="relative">
+            <div> Called api is: {api}</div>
             <div className="home-background opacity-35 h-screen w-screen fixed -top-14 -bottom-3 overflow-hidden"></div>
             <div className="relative z-10 pl-1 md:pb-20 flex flex-col items-center justify-center h-full w-[99vw]">
                 {/* Hero Section */}

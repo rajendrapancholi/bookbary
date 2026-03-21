@@ -30,3 +30,15 @@ export const loginUser = async (data: LoginRequest) => {
     },
   };
 };
+
+export interface RegisterRequest {
+  fName: string;
+  lName: string;
+  email: string;
+  password: string;
+}
+
+export const registerUser = async (data: RegisterRequest) => {
+  const response = await axiosInstance.post("/auth/register", data);
+  return response.data; 
+};
