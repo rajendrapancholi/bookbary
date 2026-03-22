@@ -6,6 +6,10 @@ import authorRoutes from "./routes/authorRoutes";
 import categoryRoutes from "./routes/categoryRoutes";
 import cors from "cors";
 import morgan from "morgan";
+import session from 'express-session';
+import { ENV } from "./config/env";
+import { PassportConfig } from "./config/passport";
+import passport from "passport";
 dotenv.config();
 
 // Initialize express
@@ -20,6 +24,22 @@ const corsOptions = {
 };
 // Use the CORS middleware with the specified options
 app.use(cors(corsOptions));
+app.use(
+  session({
+    secret: ENV.SESSION_SECRET || 'keyboardcat',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: ENV.NODE_ENV === 'production',
+      sameSite: 'lax',
+    },
+  })
+);
+
+PassportConfig.initialize();
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(morgan('dev')); 
 
 // Body parser middleware

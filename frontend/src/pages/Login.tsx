@@ -1,13 +1,18 @@
-'use client'
+"use client";
 import React, { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import toast from "react-hot-toast";
+import OAuthButtons from "../components/OAuthButtons";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const { login : mutate, isLoggingIn: isLoading, loginError: error } = useAuth();
+  const {
+    login: mutate,
+    isLoggingIn: isLoading,
+    loginError: error,
+  } = useAuth();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -35,8 +40,8 @@ const Login: React.FC = () => {
     });
   };
   return (
-    <div className="flex mx-auto h-full w-full">
-      <div className="flex flex-1/2 flex-col my-3 justify-center items-center h-full">
+    <div className="flex mx-auto h-screen w-full">
+      <div className="flex flex-1/2 flex-col justify-center items-center h-full">
         <div className="text-sm flex flex-col gap-4 justify-center items-center">
           <img src="/logo.png" alt="BookBary" className="size-20" />
           <h1 className="text-4xl dark:text-gray-100">Welcome Back!!</h1>
@@ -45,9 +50,7 @@ const Login: React.FC = () => {
           </p>
         </div>
         <form onSubmit={handleSubmit} className="p-8 rounded-lg w-96">
-          {error && (
-            <p className="text-red-500">{(error as Error).message}</p>
-          )}
+          {error && <p className="text-red-500">{(error as Error).message}</p>}
           <input
             type="email"
             name="email"
@@ -78,6 +81,11 @@ const Login: React.FC = () => {
             {isLoading ? "Logging in..." : "Login"}
           </button>
         </form>
+
+        <p className="text-center dark:text-gray-200 text-gray-400">Or</p>
+        <div className="my-4">
+          <OAuthButtons />
+        </div>
       </div>
 
       <div className="flex flex-1/2 justify-center items-center text-white bg-neutral-600 dark:bg-neutral-800 rounded-l-4xl">

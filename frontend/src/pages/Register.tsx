@@ -15,8 +15,8 @@ const Register: React.FC = () => {
   } = useAuth();
 
   const [formData, setFormData] = useState({
-    fName: "",
-    lName: "",
+    fname: "",
+    lname: "",
     email: "",
     password: "",
   });
@@ -93,7 +93,7 @@ const Register: React.FC = () => {
           <div className="flex gap-4 mb-4">
             <input
               type="text"
-              name="fName"
+              name="fname"
               placeholder="First Name"
               onChange={handleChange}
               required
@@ -101,7 +101,7 @@ const Register: React.FC = () => {
             />
             <input
               type="text"
-              name="lName"
+              name="lname"
               placeholder="Last Name"
               onChange={handleChange}
               required

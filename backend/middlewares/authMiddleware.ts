@@ -1,17 +1,12 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { User } from "../models/User";
-
-// Extend Express Request to include `user` property
-export interface AuthRequest extends Request {
-  user?: User;
-}
+import { AuthRequest, AuthUser } from "../types/express";
 
 // Protect middleware for authentication
 export const protect = async (
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   let token: string | undefined;
 
@@ -25,7 +20,7 @@ export const protect = async (
       const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
 
       // Attach user to the request object
-      req.user = decoded as User;
+      req.user = decoded as AuthUser;
 
       // Call next if authenticated
       next();
@@ -37,10 +32,70 @@ export const protect = async (
   }
 };
 
+export const verify = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction,
+) => {
+  let token: string | undefined;
+
+  try {
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith("Bearer")
+    ) {
+      try {
+        token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+
+        // Attach user to the request object
+        req.user = decoded as AuthUser;
+
+        // Call next if authenticated
+        next();
+      } catch (error) {
+        res.status(401).json({ message: "Not authorized, token failed" });
+      }
+    } else {
+      res.status(401).json({ message: "Not authorized, no token" });
+    }
+    if (!token)
+      return res.status(401).json({ message: "Not authenticated (no token)" });
+
+    // --------------- SAFE METHODS ----------------
+    if (["GET", "HEAD", "OPTIONS"].includes(req.method)) {
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+
+        // Attach user payload
+        req.user = decoded as AuthUser;
+        return next();
+      } catch (err) {
+        console.warn("JWT verification failed:", (err as Error).message);
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+    }
+  } catch (err) {}
+};
+
+export const authorize = (roles: AuthUser["role"][]) => {
+  return (req: AuthRequest, res: Response, next: NextFunction) => {
+    if (!req.user)
+      return res.status(401).json({ message: "Unauthorized: No user context" });
+
+    const userRole = req.user.role.toLowerCase();
+    const allowedRoles = roles.map((r) => r.toLowerCase());
+    if (!allowedRoles.includes(userRole))
+      return res.status(403).json({ message: "Forbidden: Insufficient role" });
+
+    next();
+  };
+};
+
 export const adminOnly = async (
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   let token: string | undefined;
 
@@ -52,8 +107,8 @@ export const adminOnly = async (
       token = req.headers.authorization.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
 
-      req.user = decoded as User;
-      if (req.user?.isAdmin) {
+      req.user = decoded as AuthUser;
+      if (req.user.role === "admin") {
         next();
       } else {
         res.status(403).json({ message: "Access denied. Admins only." });

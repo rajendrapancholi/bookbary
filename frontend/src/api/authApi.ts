@@ -32,8 +32,8 @@ export const loginUser = async (data: LoginRequest) => {
 };
 
 export interface RegisterRequest {
-  fName: string;
-  lName: string;
+  fname: string;
+  lname: string;
   email: string;
   password: string;
 }

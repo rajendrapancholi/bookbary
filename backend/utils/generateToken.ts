@@ -6,7 +6,7 @@ export const generateToken = (
   role: string
 ): string => {
   return jwt.sign({ id, isAdmin, role }, process.env.JWT_SECRET as string, {
-    expiresIn: "30d",
+    expiresIn: "7d",
   });
 };
 
