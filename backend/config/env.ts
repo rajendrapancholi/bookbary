@@ -4,7 +4,7 @@ dotenv.config();
 export const ENV = {
   PORT: process.env.BASE_PORT || 5000,
   // CLIENT
-  CLIENT_ORIGINS: process.env.CLIENT_ORIGINS,
+  CLIENT_ORIGINS: process.env.CLIENT_ORIGINS || 'http://localhost:5000',
   CLIENT_ORIGIN: process.env.CLIENT_ORIGIN,
 
   // SERVER
