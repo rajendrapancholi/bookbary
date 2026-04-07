@@ -37,7 +37,7 @@ export const isTokenBlacklisted = async (token: string): Promise<boolean> => {
 /**
  * NEW: Revoke all active sessions for a specific user ID
  */
-export const revokeAllUserSessions = async (userId: number) => {
+export const revokeAllUserSessions = async (userId: string) => {
   const keys = await redis.keys(`blacklist:${userId}:*`);
   if (keys.length > 0) {
     await redis.del(...keys);

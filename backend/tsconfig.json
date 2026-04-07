@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "ES2020",
-    "moduleResolution": "node",
+    "moduleResolution": "node16",
     "esModuleInterop": true,
     "outDir": "./dist",          // compiled JS goes here
     "rootDir": ".",              // compile from backend root

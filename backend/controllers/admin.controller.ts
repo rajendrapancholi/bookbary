@@ -7,7 +7,7 @@ export const banUser = async (req: Request, res: Response) => {
 
   await db.execute("UPDATE USERS SET is_active = 0 WHERE id = ?", [userIdToBan]);
 
-  await revokeAllUserSessions(Number(userIdToBan));
+  await revokeAllUserSessions(userIdToBan.toString());
 
   res.json({ message: "User banned and sessions revoked." });
 };
