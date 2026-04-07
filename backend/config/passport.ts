@@ -101,7 +101,7 @@ export class PassportConfig {
           const user = await handleOAuthUser(profile, provider);
 
           // Generate JWT
-          const token = generateToken(Number(user.id), user.role==='admin', user.role);
+          const token = generateToken(Number(user.uid), user.role==='admin', user.role);
 
           // Attach to req for middleware
           (req as any).authTokens = { token };

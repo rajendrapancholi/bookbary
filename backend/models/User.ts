@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 
 // Base user from database
 export interface User {
-  id?: number;
+  uid?: number;
   fname: string;
   lname: string;
   email: string;
@@ -57,7 +57,7 @@ export const getUserByEmail = async (email: string) => {
 
 // models/User.ts
 export interface OAuthUser {
-  id: string;
+  uid: string;
   fname: string;
   lname: string;
   email: string;

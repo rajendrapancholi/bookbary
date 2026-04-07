@@ -42,3 +42,8 @@ export const registerUser = async (data: RegisterRequest) => {
   const response = await axiosInstance.post("/auth/register", data);
   return response.data; 
 };
+
+export const getProfile = async (): Promise<LoginResponse> => {
+  const { data } = await axiosInstance.get("/auth/me");
+  return data;
+};

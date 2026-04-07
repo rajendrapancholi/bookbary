@@ -1,12 +1,12 @@
 import express from 'express';
 import { registerUser, loginUser, me, logout, googleAuth, oauthCallback, githubAuth, linkedinAuth } from '../controllers/authController';
-import { protect } from '../middlewares/authMiddleware';
+import { protect, verify } from '../middlewares/authMiddleware';
 import passport from 'passport';
 import asyncHandler from '../middlewares/asyncHandler';
 
 const router = express.Router();
 
-router.get('/me', protect, me); // JWT-protected route, not CSRF-protected
+router.get('/me', verify, me); // JWT-protected route, not CSRF-protected
 router.post('/login', loginUser);
 router.post('/register', registerUser);
 router.post('/logout', protect, logout);

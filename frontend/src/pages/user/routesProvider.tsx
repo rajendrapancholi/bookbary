@@ -21,6 +21,7 @@ import UserCart from "../../components/User/UserCart";
 import GetAuthors from "../admin/GetAuthors";
 import AddBook from "../admin/AddBook";
 import Register from "../Register";
+import OAuthCallback from "../../components/OauthCallback";
 
 const RoutesProvider: React.FC = () => {
     const router = createBrowserRouter([
@@ -31,9 +32,11 @@ const RoutesProvider: React.FC = () => {
                 { path: "/", element: <Home /> },
                 { path: "/login", element: <Login /> },
                 { path: "/register", element: <Register /> },
+                { path: "/oauth-callback", element: <OAuthCallback /> }, 
                 { path: "/about", element: <About /> },
                 { path: "/services", element: <Services /> },
                 { path: "/contact", element: <Contact /> },
+
             ],
         },
         {

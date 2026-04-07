@@ -1,6 +1,7 @@
 import { Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { AuthRequest, AuthUser } from "../types/express";
+import { isTokenBlacklisted, verifyToken } from "../utils/generateToken";
 
 // Protect middleware for authentication
 export const protect = async (
@@ -17,11 +18,15 @@ export const protect = async (
   ) {
     try {
       token = req.headers.authorization.split(" ")[1];
-      const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+      if (await isTokenBlacklisted(token)) {
+        return res
+          .status(401)
+          .json({ message: "Token has been revoked. Please log in again." });
+      }
+      const decoded = verifyToken(token);
 
       // Attach user to the request object
       req.user = decoded as AuthUser;
-
       // Call next if authenticated
       next();
     } catch (error) {
@@ -37,45 +42,28 @@ export const verify = async (
   res: Response,
   next: NextFunction,
 ) => {
-  let token: string | undefined;
+  const authHeader = req.headers.authorization;
 
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Not authorized, no token" });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  if (await isTokenBlacklisted(token)) {
+    return res
+      .status(401)
+      .json({ message: "Token has been revoked. Please log in again." });
+  }
   try {
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer")
-    ) {
-      try {
-        token = req.headers.authorization.split(" ")[1];
-        const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    const decoded = verifyToken(token) as AuthUser;
 
-        // Attach user to the request object
-        req.user = decoded as AuthUser;
-
-        // Call next if authenticated
-        next();
-      } catch (error) {
-        res.status(401).json({ message: "Not authorized, token failed" });
-      }
-    } else {
-      res.status(401).json({ message: "Not authorized, no token" });
-    }
-    if (!token)
-      return res.status(401).json({ message: "Not authenticated (no token)" });
-
-    // --------------- SAFE METHODS ----------------
-    if (["GET", "HEAD", "OPTIONS"].includes(req.method)) {
-      try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
-
-        // Attach user payload
-        req.user = decoded as AuthUser;
-        return next();
-      } catch (err) {
-        console.warn("JWT verification failed:", (err as Error).message);
-        return res.status(401).json({ message: "Not authenticated" });
-      }
-    }
-  } catch (err) {}
+    req.user = decoded;
+    return next();
+  } catch (error) {
+    console.error("JWT verification failed:", error);
+    return res.status(401).json({ message: "Not authorized, token failed" });
+  }
 };
 
 export const authorize = (roles: AuthUser["role"][]) => {

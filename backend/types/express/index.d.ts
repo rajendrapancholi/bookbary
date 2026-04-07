@@ -5,7 +5,7 @@ import { DefaultSession } from "@auth/core/types";
 
 // AuthUser type
 export interface AuthUser {
-  id: number;
+  uid: string;
   name: string;
   email: string;
   role: string
@@ -18,7 +18,7 @@ export interface AuthRequest extends Request {
 declare module "@auth/core/types" {
   interface Session {
     user: {
-      id?: string;
+      uid?: string;
       role?: string
       name?: string | null;
       email?: string | null;
@@ -31,7 +31,7 @@ declare global {
   namespace Express {
     interface Request {
       user?: {
-        id: number;
+        uid: number;
         name: string;
         role: string
         email: string;

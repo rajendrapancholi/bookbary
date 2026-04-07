@@ -1,13 +1,51 @@
 import jwt from "jsonwebtoken";
+import { redis } from "../config/redis";
+
+const JWT_SECRET = process.env.JWT_SECRET as string;
 
 export const generateToken = (
-  id: number,
+  uid: number,
   isAdmin: boolean,
-  role: string
+  role: string,
 ): string => {
-  return jwt.sign({ id, isAdmin, role }, process.env.JWT_SECRET as string, {
+  return jwt.sign({ uid, isAdmin, role }, process.env.JWT_SECRET as string, {
     expiresIn: "7d",
   });
+};
+
+export const blacklistToken = async (token: string) => {
+  try {
+    const decoded = jwt.decode(token) as any;
+    if (decoded && decoded.uid && decoded.exp) {
+      const ttl = decoded.exp - Math.floor(Date.now() / 1000);
+      if (ttl > 0) {
+        // Key format: blacklist:userId:tokenString
+        await redis.set(`blacklist:${decoded.uid}:${token}`, "true", "EX", ttl);
+      }
+    }
+  } catch (err) {
+    console.error("Token blacklisting failed:", err);
+  }
+};
+
+export const isTokenBlacklisted = async (token: string): Promise<boolean> => {
+  // We search for keys ending in this specific token
+  const keys = await redis.keys(`blacklist:*:${token}`);
+  return keys.length > 0;
+};
+
+/**
+ * NEW: Revoke all active sessions for a specific user ID
+ */
+export const revokeAllUserSessions = async (userId: number) => {
+  const keys = await redis.keys(`blacklist:${userId}:*`);
+  if (keys.length > 0) {
+    await redis.del(...keys);
+  }
+};
+
+export const verifyToken = (token: string) => {
+  return jwt.verify(token, JWT_SECRET);
 };
 
 /* 

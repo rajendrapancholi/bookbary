@@ -5,14 +5,12 @@ import asyncHandler from "../middlewares/asyncHandler";
 import { OAuthUser, User, createUser, getUserByEmail } from "../models/User";
 import { generateToken } from "../utils/generateToken";
 import { ENV } from "../config/env";
-import jwt from "jsonwebtoken";
 import { fetchUserById } from "../services/auth.service";
-import { AuthUser } from "../types/express";
+import { AuthRequest } from "../types/express";
 // Register user
 export const registerUser = asyncHandler(
   async (req: Request, res: Response) => {
     const { fname, lname, email, password } = req.body;
-    console.log("Request body:", req.body); // Log to check incoming request
 
     // Ensure all required fields are present
     if (!fname || !lname || !email || !password) {
@@ -46,34 +44,31 @@ export const registerUser = asyncHandler(
   },
 );
 
-export const me = asyncHandler(async (req: Request, res: Response) => {
-  let token: string | undefined;
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    try {
-      token = req.headers.authorization.split(" ")[1];
-      if (!token) return res.status(401).json({ message: "Not authenticated" });
+export const me = asyncHandler(async (req: AuthRequest, res: Response) => {
+  if (!req.user) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as AuthUser;
+  try {
+    const userId = req.user.uid;
+    const user = await fetchUserById(userId.toString());
 
-      const user = await fetchUserById(decoded.id);
-      
-      if (!user) return res.status(401).json({ message: "Not authenticated" });
-      res.json({
-        user: {
-          id: user.id,
-          email: user.email,
-          name: `${user.fname} ${user.lname}`,
-          role: user.role,
-        },
-      });
-    } catch (err) {
-      res.status(403).json({ message: "Forbidden" });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-  } else {
-    res.status(401).json({ message: "Not authorized, no token" });
+
+    return res.json({
+      user: {
+        id: user.uid,
+        email: user.email,
+        name: `${user.fname} ${user.lname}`,
+        role: user.role,
+        isAdmin: user.isAdmin === 1,
+      },
+    });
+  } catch (err) {
+    console.error("Error in /me:", err);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
@@ -87,7 +82,7 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
   }
 
   const user = await getUserByEmail(email);
-  console.log("User is", user);
+
   if (user && (await bcrypt.compare(password, user.password))) {
     const token = generateToken(user.uid, user.isAdmin === 1, user.role);
 
@@ -105,6 +100,18 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
     res.status(401).json({ message: "Invalid email or password" });
   }
 });
+
+export const resetPassword = async (req: Request, res: Response) => {
+  const { userId, newPassword } = req.body;
+
+  // await updatePasswordInDb(userId, newPassword);
+
+  // await revokeAllUserSessions(userId);
+
+  res.json({
+    message: "Password updated. All other sessions have been logged out.",
+  });
+};
 
 // ---------------- OAuth Controller ----------------
 export const googleAuth = (req: Request, res: Response, next: NextFunction) => {
@@ -136,30 +143,18 @@ export const oauthCallback = async (
   res: Response,
 ): Promise<void> => {
   const user = req.user as OAuthUser | undefined;
+  console.log("useris : ", user);
   if (!user)
     return res.redirect(`${ENV.CLIENT_ORIGIN}/signin?error=oauth_failed`);
 
   const token = generateToken(
-    Number(user.id),
+    Number(user.uid),
     user.role === "admin",
     user.role,
   );
-
-  res.cookie("token", token, {
-    httpOnly: true,
-    secure: ENV.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-  });
-
-  // res.cookie("csrf-protection-token-readable", csrfToken, {
-  //   httpOnly: false,
-  //   secure: ENV.NODE_ENV === "production",
-  //   sameSite: "lax",
-  //   path: "/",
-  // });
-
-  res.redirect(`${ENV.CLIENT_ORIGIN}/oauth-callback?login=success`);
+  console.log("toekn: ", token);
+  const redirectUrl = `${ENV.CLIENT_ORIGIN}/oauth-callback?login=success&token=${token}`;
+  res.redirect(redirectUrl);
 };
 
 // ---------------- LOGOUT ----------------
@@ -172,10 +167,35 @@ export const logout = async (req: Request, res: Response) => {
         0,
         Math.floor((decoded.exp * 1000 - Date.now()) / 1000),
       );
-      // await RedisManager.addToBlacklist(decoded.jti, expSeconds);
     } catch {}
   }
   res.clearCookie("token", { path: "/" });
   res.clearCookie("csrf-protection-token-readable", { path: "/" });
   // res.redirect(`${ENV.CLIENT_ORIGIN}/`);
 };
+/*
+
+export const logout = async (req: Request, res: Response) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader?.split(' ')[1];
+
+  if (token) {
+    try {
+      const decoded: any = jwt.decode(token);
+      if (decoded && decoded.exp) {
+        const currentTime = Math.floor(Date.now() / 1000);
+        const ttl = decoded.exp - currentTime;
+
+        if (ttl > 0) {
+          await redis.set(`blacklist:${token}`, 'true', 'EX', ttl);
+        }
+      }
+    } catch (err) {
+      console.error("Blacklisting failed:", err);
+    }
+  }
+
+  res.clearCookie("token");
+  res.status(200).json({ message: "Logged out and token revoked" });
+};
+*/

@@ -6,7 +6,7 @@ import { NewUser, User } from "../models/User";
 // Get a user by email
 export const fetchUserByEmail = async (email: string): Promise<User | null> => {
   const [rows] = await db.execute<RowDataPacket[]>(
-    "SELECT * FROM users WHERE email = ?",
+    "SELECT * FROM USERS WHERE email = ?",
     [email],
   );
   const user = (rows as User[])[0];
@@ -14,10 +14,10 @@ export const fetchUserByEmail = async (email: string): Promise<User | null> => {
 };
 
 // Get a user by id
-export const fetchUserById = async (id: number): Promise<User | null> => {
+export const fetchUserById = async (uid: string): Promise<User | null> => {
   const [rows] = await db.execute<RowDataPacket[]>(
-    "SELECT * FROM users WHERE id = ?",
-    [id],
+    "SELECT * FROM USERS WHERE uid = ?",
+    [uid],
   );
   const user = (rows as User[])[0];
   return user || null;
@@ -39,7 +39,7 @@ export const createUser = async (newUser: NewUser): Promise<User | null> => {
 
   try {
     // Insert the user
-    const sql = `INSERT INTO users (fname, lname, email, password, role, provider) VALUES (?, ?, ?, ?, ?, ?)`;
+    const sql = `INSERT INTO USERS (fname, lname, email, password, role, provider) VALUES (?, ?, ?, ?, ?, ?)`;
     const [result]: any = await db.execute<ResultSetHeader>(sql, [
       fname,
       lname,
@@ -50,12 +50,12 @@ export const createUser = async (newUser: NewUser): Promise<User | null> => {
     ]);
 
     // result.insertId contains the new user ID
-    const id = result.insertId;
-    if (!id) return null;
+    const uid = result.insertId;
+    if (!uid) return null;
 
     // Return the created user object
     return {
-      id,
+      uid,
       fname,
       lname,
       email,

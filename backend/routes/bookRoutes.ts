@@ -14,8 +14,8 @@ import { adminOnly, protect } from "../middlewares/authMiddleware";
 const router = express.Router();
 
 // Public Routes
-router.get("/bk", getBks); // Get all books
-router.get("/", protect, getBooks); // Get all books
+// router.get("/bk", getBks); // Get all books
+router.get("/", getBooks); // Get all books
 router.get("/returnbooks", protect, getReturnBooks); // Get all return books
 router.get("/returnbooks/:id", protect, getReturnBkById); // Get all return books
 router.get("/:id", protect, getBook); // Get a book by ID
