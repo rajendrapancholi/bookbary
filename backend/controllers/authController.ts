@@ -1,12 +1,12 @@
 import bcrypt from "bcryptjs";
-import { NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import passport from "passport";
 import asyncHandler from "../middlewares/asyncHandler";
-import { OAuthUser, User, createUser, getUserByEmail } from "../models/User";
+import { createUser, getUserByEmail, type OAuthUser, type User } from "../models/User";
 import { generateToken } from "../utils/generateToken";
 import { ENV } from "../config/env";
 import { fetchUserById } from "../services/auth.service";
-import { AuthRequest } from "../types/express";
+import type { AuthRequest } from "../types/express";
 // Register user
 export const registerUser = asyncHandler(
   async (req: Request, res: Response) => {

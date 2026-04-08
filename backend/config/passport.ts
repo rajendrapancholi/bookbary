@@ -3,16 +3,16 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as GitHubStrategy } from 'passport-github2';
 import { Strategy as LinkedInStrategy } from 'passport-linkedin-oauth2';
 
-import {
+import type {
   GoogleUserProfile,
   GitHubUserProfile,
   LinkedInUserProfile
 } from '../types/oauth.user.types';
 
-import { AuthRequest } from '../types/express';
-import { Response } from 'express';
+import type { AuthRequest } from '../types/express';
+import type { Response } from 'express';
 import { ENV } from './env';
-import { OAuthUser } from '../models/User';
+import type { OAuthUser } from '../models/User';
 import { generateRandomPassword } from '../utils/generateRandomPassword';
 import { generateToken } from '../utils/generateToken';
 import { createUser, fetchUserByEmail } from '../services/auth.service';

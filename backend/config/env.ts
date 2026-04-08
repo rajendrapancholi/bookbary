@@ -6,7 +6,8 @@ export const ENV = {
   // CLIENT
   CLIENT_ORIGINS: process.env.CLIENT_ORIGINS || 'http://localhost:5000',
   CLIENT_ORIGIN: process.env.CLIENT_ORIGIN,
-
+  
+  REDIS_URL: process.env.REDIS_URL! || 'redis://127.0.0.1:6379',
   // SERVER
   BASE_URL: process.env.BASE_URL || 'http://localhost:5000',
   NODE_ENV: process.env.NODE_ENV || 'development',
