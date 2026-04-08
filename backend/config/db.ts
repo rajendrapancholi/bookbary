@@ -10,11 +10,11 @@ const pool = mysql.createPool({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME, 
   port: Number(process.env.DB_PORT) || 4000,
-  // ssl: {
-  //   // TiDB provides certificates for serverless clusters
-  //   ca: caBuffer,
-  //   rejectUnauthorized: true,
-  // },
+  ssl: {
+    // TiDB provides certificates for serverless clusters
+    ca: caBuffer,
+    rejectUnauthorized: true,
+  },
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
